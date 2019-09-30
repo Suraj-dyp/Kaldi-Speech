@@ -1,0 +1,31 @@
+totgauss: This sets the upper limit of the number of Gaussians to include in total 
+          in the model.
+
+======================= Changing only totgauss =================================
+totgauss=1000
+%WER 55.58 [ 608 / 1094, 35 ins, 163 del, 410 sub ] exp/mono/decode_test/wer_9
+
+totgauss=1300
+%WER 53.38 [ 584 / 1094, 38 ins, 115 del, 431 sub ] exp/mono/decode_test/wer_7
+
+totgauss=1400
+%WER 55.39 [ 606 / 1094, 34 ins, 146 del, 426 sub ] exp/mono/decode_test/wer_8
+
+totgauss=1500
+%WER 53.02 [ 580 / 1094, 39 ins, 144 del, 397 sub ] exp/mono/decode_test/wer_7
+
+totgauss=1600
+%WER 54.11 [ 592 / 1094, 33 ins, 146 del, 413 sub ] exp/mono/decode_test/wer_10
+
+================================================================================
+
+============================= Changing scale_opts ==============================
+scale_opts="--transition-scale=1.0 --acoustic-scale=0.2 --self-loop-scale=0.1"
+totgauss=1500
+%WER 54.48 [ 596 / 1094, 30 ins, 139 del, 427 sub ] exp/mono/decode_test/wer_8
+
+scale_opts="--transition-scale=1.0 --acoustic-scale=0.01 --self-loop-scale=0.1"
+totgauss=1500
+%WER 61.79 [ 676 / 1094, 45 ins, 230 del, 401 sub ] exp/mono/decode_test/wer_7
+
+================================================================================

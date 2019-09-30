@@ -1,0 +1,21 @@
+a)
+    phones.txt contains various suffixes meaning for which is explained below:
+    _B: beginning of a word
+    _I: word-internal
+    _E: word-ending
+    _S: singleton word i.e. a phone with only one word
+
+b)
+    There are lot of symbols at end of file phones.txt which starts #.
+    These phone symbols are called disambiguation symbols and we will explain those below:
+    
+    1) #1, #2, #3, and so on - These are used when a phoneme sequence is a prefix of 
+       another phoneme sequence in the lexicon. We add these symbols to such that L o G 
+       is determinizable
+
+    2) #0 - These are backoff arcs symbols in the language model G to ensure that G is 
+       determinizable after removing epsilons
+
+    3) #-1 - These are put in place of epsilons that appear on the left of context FST C
+       before we start outputting symbols for words with an empty phonetic representation 
+       (e.g. when the beginning and end of sentence symbols <s> and </s>).
