@@ -14,7 +14,7 @@
 ###############################################################
 #                   Configuring the ASR pipeline
 ###############################################################
-stage=0    # from which stage should this script start
+stage=0    # from which stage should this script start (for task3 change 0 to 4)
 nj=4        # number of parallel jobs to run during training
 test_nj=2    # number of parallel jobs to run during decoding
 # the above two parameters are bounded by the number of speakers in each set
@@ -43,6 +43,7 @@ fi
 if [ $stage -le 3 ]; then
   ### Monophone
     echo "Monophone training"
+    # for task1 change steps/train_mono.sh to task1/train_mono.sh
 	  steps/train_mono.sh --nj "$nj" --cmd "$train_cmd" data/train data/lang exp/mono
     echo "Monophone training done"
     (
@@ -57,18 +58,29 @@ if [ $stage -le 3 ]; then
     ) &
 fi
 
-# Stage 4: Training tied-state triphone acoustic models
-if [ $stage -le 4 ]; then
+# Stage 4: Training tied-state triphone acoustic models (for task3 uncomment entire if statement)
+# if [ $stage -le 4 ]; then
   ### Triphone
-    echo "Triphone training"
+    # echo "Triphone training"
     # steps/align_si.sh --nj $nj --cmd "$train_cmd" \
     #    data/train data/lang exp/mono exp/mono_ali
-	# steps/train_deltas.sh --boost-silence 1.25  --cmd "$train_cmd"  \
-	#    2000 20000 data/train data/lang exp/mono_ali exp/tri1
-    echo "Triphone training done"
-fi
+	  # steps/train_deltas.sh --boost-silence 1.25  --cmd "$train_cmd"  \
+	  #  2300 35000 data/train data/lang exp/mono_ali exp/tri1
+    # echo "Triphone training done"
+    # (
+    # echo "Decoding the test set"
+    # utils/mkgraph.sh data/lang exp/tri1 exp/tri1/graph
+  
+    # This decode command will need to be modified when you 
+    # want to use tied-state triphone models 
+    # steps/decode.sh --nj $test_nj --cmd "$decode_cmd" \
+    #   exp/tri1/graph data/test exp/tri1/decode_test
+    # echo "Monophone decoding done."
+    # ) &
+# fi
 
 wait;
 #score
 # Computing the best WERs
+# for task3 replace exp/*/decode* with exp/tri1/decode*
 for x in exp/*/decode*; do [ -d $x ] && grep WER $x/wer_* | utils/best_wer.sh; done

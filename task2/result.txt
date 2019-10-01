@@ -19,3 +19,8 @@ b)
     3) #-1 - These are put in place of epsilons that appear on the left of context FST C
        before we start outputting symbols for words with an empty phonetic representation 
        (e.g. when the beginning and end of sentence symbols <s> and </s>).
+
+
+    These are created by kaldi during execution of following command during prepration 
+    of language model:
+      $ utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang

@@ -1,0 +1,21 @@
+a)
+    %WER 51.19 [ 560 / 1094, 57 ins, 124 del, 379 sub ] exp/tri1/decode_test/wer_15
+
+b)
+    2000 - number of leaves
+    20000 - total number of gaussians
+
+    1. 2000 & 25000
+        %WER 51.10 [ 559 / 1094, 42 ins, 142 del, 375 sub ] exp/tri1/decode_test/wer_16
+    2. 2000 & 30000
+        %WER 51.01 [ 558 / 1094, 56 ins, 118 del, 384 sub ] exp/tri1/decode_test/wer_13
+    3. 1500 & 20000
+        %WER 52.65 [ 576 / 1094, 43 ins, 122 del, 411 sub ] exp/tri1/decode_test/wer_15
+    4. 2500 & 20000
+        %WER 51.28 [ 561 / 1094, 58 ins, 127 del, 376 sub ] exp/tri1/decode_test/wer_13
+    5. 2200 & 20000
+        %WER 50.91 [ 557 / 1094, 51 ins, 129 del, 377 sub ] exp/tri1/decode_test/wer_16
+    6. 2300 & 20000
+        %WER 50.91 [ 557 / 1094, 55 ins, 126 del, 376 sub ] exp/tri1/decode_test/wer_14
+    7. 2300 & 3500
+        %WER 51.55 [ 564 / 1094, 44 ins, 133 del, 387 sub ] exp/tri1/decode_test/wer_17
