@@ -1,0 +1,47 @@
+Task 1:
+    1. change steps/train_mono.sh to task1/train_mono.sh in line 47 in run.sh
+
+        steps/train_mono.sh --nj "$nj" --cmd "$train_cmd" data/train data/lang exp/mono
+
+                                        to
+
+        task1/train_mono.sh --nj "$nj" --cmd "$train_cmd" data/train data/lang exp/mono
+    2. run ./run.sh
+
+Task 2: Theory question
+
+Task 3: 
+    1. change stage=0 to stage=4 in line 17 in run.sh (not required to run data prepration 
+       step again since it is done in task1)
+    2. Uncoment following lines in run.sh (line 61 to 80)
+
+        Stage 4: Training tied-state triphone acoustic models (for task3 uncomment entire if statement)
+        # if [ $stage -le 4 ]; then
+        ### Triphone
+            # echo "Triphone training"
+            # steps/align_si.sh --nj $nj --cmd "$train_cmd" \
+            #    data/train data/lang exp/mono exp/mono_ali
+            # steps/train_deltas.sh --boost-silence 1.25  --cmd "$train_cmd"  \
+            #  2300 35000 data/train data/lang exp/mono_ali exp/tri1
+            # echo "Triphone training done"
+            # (
+            # echo "Decoding the test set"
+            # utils/mkgraph.sh data/lang exp/tri1 exp/tri1/graph
+        
+            # This decode command will need to be modified when you 
+            # want to use tied-state triphone models 
+            # steps/decode.sh --nj $test_nj --cmd "$decode_cmd" \
+            #   exp/tri1/graph data/test exp/tri1/decode_test
+            # echo "Monophone decoding done."
+            # ) &
+        # fi
+
+    3. Replace exp/*/decode* with exp/tri1/decode* as now trained model resides in different folder
+        
+        for x in exp/*/decode*; do [ -d $x ] && grep WER $x/wer_* | utils/best_wer.sh; done
+
+                                    to
+
+        for x in exp/tri1/decode*; do [ -d $x ] && grep WER $x/wer_* | utils/best_wer.sh; done
+
+    4. run ./run.sh
