@@ -75,7 +75,7 @@ fi
     # want to use tied-state triphone models 
     # steps/decode.sh --nj $test_nj --cmd "$decode_cmd" \
     #   exp/tri1/graph data/test exp/tri1/decode_test
-    # echo "Monophone decoding done."
+    # echo "Triphone decoding done."
     # ) &
 # fi
 

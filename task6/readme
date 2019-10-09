@@ -1,0 +1,2 @@
+Run following command in cmd:
+task6/score.sh --cmd "run.pl" data/test exp/tri1/graph exp/tri1/decode_test  
