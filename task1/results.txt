@@ -29,3 +29,6 @@ totgauss=1500
 %WER 61.79 [ 676 / 1094, 45 ins, 230 del, 401 sub ] exp/mono/decode_test/wer_7
 
 ================================================================================
+
+#itr=150 totgauss=1500
+%WER 53.02 [ 580 / 1094, 38 ins, 153 del, 389 sub ] exp/mono/decode_test/wer_8

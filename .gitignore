@@ -3,3 +3,7 @@ exp/
 mfcc/
 steps
 utils
+task7/*.wav
+task8/*.csv
+task8/*.txt
+task7/*.txt

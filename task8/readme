@@ -1,0 +1,10 @@
+utt2spk is created using following command:
+cat data/truetest/wav.scp | cut -f 1 -d ' ' | perl -ane 'chomp; @F = split "_", $_; print $_ . " " . @F[0] . "\n";' > data/truetest/utt2spk
+
+spk2utt is created using following command:
+utils/fix_data_dir.sh data/truetest
+
+Then run task8.sh from recipie folder
+
+Results are present in following path: 
+/home/suraj/apps/kaldi/egs/assgmt2/recipe/exp/tri1/decode_test_8/scoring/log/score.7.log
