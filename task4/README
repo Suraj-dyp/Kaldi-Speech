@@ -1,0 +1,14 @@
+# Task 4: Language models
+# Steps to run task 4
+
+Assumption: Triphone modelling is already done (i.e. till task3)
+1. copy task4/G.fst to data/lang/
+	cp task4/G.fst data/lang/
+2. Set stage=4 in run.sh
+3. ./run.sh 
+
+Results:
+%WER 46.44 [ 508 / 1094, 45 ins, 111 del, 352 sub ] exp/tri1/decode_test/wer_13
+
+Language Model obtained using the following hyperparameters:
+ngram-count -lm $trg_dir/3gram.gt011 -gt1min 0 -gt2min 1 -gt3min 1 -order 3 -text $train_dir/train.txt -unk

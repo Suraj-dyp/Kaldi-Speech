@@ -1,0 +1,30 @@
+#Steps to perform Task 5 :  Rescoring with a larger LM
+
+Results :
+
+5 (a): WER : 43.88
+   Time : real(7m57.104s), user(11m14.331s), system(0m26.146s)
+  (b): WER : 46.5
+   Time : real(0m8.201s), user(0m18.131s), system(0m0.957s)
+Approach (b) i.e. using lmrescore.sh is faster that approach (a) where we have to explicitly reconstruct HCLG graph and then calculate the WER.
+The second approach is faster by 26.103seconds.
+
+Assumption : Task 1 to Task3 have already been executed.
+
+Task 5 (a)
+1. set stage=5 in run.sh
+2. Line 91 replace exp/*/decode* with exp/tri1/decode*
+3. run the script : ./run.sh
+or if you want to see how much time it took, then
+run the following command  : time ./run.sh
+
+Task 5 (b)
+1. create a directory data/lang5   : mkdir data/lang5
+2. copy contents of data/lang to data/lang5 : cp -r data/lang data/lang5/
+3. copy task5/G.fst to data/lang5/ : cp task5/G.fst data/lang5/
+4. create direcotory :  mkdir exp/tri5/decode_test
+time steps/lmrescore.sh data/lang data/lang5 data/test exp/tri1/decode_test/ exp/tri5/decode_test
+
+Check WER in the following direcotry:
+cat exp/tri5/decode_test/wer_13
+
