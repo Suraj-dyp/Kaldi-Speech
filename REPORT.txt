@@ -1,0 +1,198 @@
+TEAM Information:
++--------------+------------+
+|     Name     | Roll Number|
++--------------+------------+
+| Nikhil Saini | 183059006  |
++--------------+------------+
+| Atul Sahay   | 18305R003  | 
++--------------+------------+
+| Suraj Kumar  | 18305R008  |
++--------------+------------+ 
+************************************************************************
+NOTE : We're getting different results(WER) on different environments(Laptops).
+************************************************************************
+TASK 1 :
+1. Parameters changed : totgauss = 1500 (Improved WER)
+	======================= Changing only totgauss ===============================
+	totgauss=1500  (BEST ADJUSTMENT)
+	%WER 53.66 [ 587 / 1094, 41 ins, 133 del, 413 sub ] exp/mono/decode_test/wer_8
+  We have tried on different parameters:
+  1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700.
+	================================================================================
+
+totgauss: This sets the upper limit of the number of Gaussians to include in total 
+          in the model.
+
+How to run:
+a) Copy run.sh and task1 folder under recipe directory.
+b) ./run.sh
+
+************************************************************************
+TASK 2 :
+
+a)
+    phones.txt contains various suffixes meaning for which is explained below:
+    _B: beginning of a word
+    _I: word-internal
+    _E: word-ending
+    _S: singleton word i.e. a phone with only one word
+
+b)
+    There are lot of symbols at end of file phones.txt which starts #.
+    These phone symbols are called disambiguation symbols and we will explain those below:
+    
+    1) #1, #2, #3, and so on - These are used when a phoneme sequence is a prefix of 
+       another phoneme sequence in the lexicon. We add these symbols to such that L o G 
+       is determinizable
+
+    2) #0 - These are backoff arcs symbols in the language model G to ensure that G is 
+       determinizable after removing epsilons
+
+    3) #-1 - These are put in place of epsilons that appear on the left of context FST C
+       before we start outputting symbols for words with an empty phonetic representation 
+       (e.g. when the beginning and end of sentence symbols <s> and </s>).
+
+
+    These are created by kaldi during execution of following command during prepration 
+    of language model:
+      $ utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang
+
+
+************************************************************************
+TASK 3:
+
+a)  Set :
+    2000 - number of leaves
+    20000 - total number of gaussians
+    in run.sh
+
+    %WER 51.19 [ 560 / 1094, 57 ins, 124 del, 379 sub ] exp/tri1/decode_test/wer_15
+
+b)
+    2000 - number of leaves
+    20000 - total number of gaussians
+
+    1. 2300 & 35000 (BEST PARAMETERS)
+        %WER 50.91 [ 557 / 1094, 55 ins, 126 del, 376 sub ] exp/tri1/decode_test/wer_14
+
+    We have tried on different set of parameters:
+    2000,25000
+    1500,20000
+    2500,20000
+    2200,20000
+    23000,20000
+
+How to run:
+ 1. change stage=0 to stage=4 in line 17 in run.sh (not required to run data prepration 
+       step again since it is done in task1)
+    2. Uncoment following lines in run.sh (line 61 to 77)
+
+        Stage 4: Training tied-state triphone acoustic models (for task3 uncomment entire if statement)
+		# if [ $stage -le 4 ]; then    
+		 
+		 #    echo "Triphone training"
+		  #   steps/align_si.sh --nj $nj --cmd "$train_cmd" \
+		   #     data/train data/lang exp/mono exp/mono_ali
+		    #       steps/train_deltas.sh --boost-silence 1.25  --cmd "$train_cmd"  \
+		     #       2300 35000 data/train data/lang exp/mono_ali exp/tri1
+		     #echo "Triphone training done"
+		     #(
+		     #echo "Decoding the test set"
+		     #utils/mkgraph.sh data/lang exp/tri1 exp/tri1/graph
+
+		     #steps/decode.sh --nj $test_nj --cmd "$decode_cmd" \
+		      # exp/tri1/graph data/test exp/tri1/decode_test
+		     #echo "Triphone decoding done."
+		     #) &
+		# fi
+
+    3. Replace exp/*/decode* with exp/tri1/decode* as now trained model resides in different folder
+       
+        for x in exp/*/decode*; do [ -d $x ] && grep WER $x/wer_* | utils/best_wer.sh; done
+
+                                    to
+
+        for x in exp/tri1/decode*; do [ -d $x ] && grep WER $x/wer_* | utils/best_wer.sh; done
+
+    4. run ./run.sh
+
+
+************************************************************************
+TASK 4:
+# Steps to run task 4
+
+Assumption: Triphone modelling is already done (i.e. till task3)
+1. copy task4/G.fst to data/lang/
+	cp task4/G.fst data/lang/
+2. Set stage=4 in run.sh
+3. ./run.sh 
+
+Results:
+%WER 45.98 [ 503 / 1094, 43 ins, 114 del, 346 sub ] exp/tri1/decode_test/wer_13
+
+Language Model obtained using the following hyperparameters:
+ngram-count -lm 3gram.gt011 -gt1min 0 -gt2min 1 -gt3min 1 -order 3 -text train.txt -unk
+
+
+************************************************************************
+TASK 5:
+#Steps to perform Task 5 :  Rescoring with a larger LM
+
+Results :
+
+5 (a): WER : 43.88
+   Time : real(7m57.104s), user(11m14.331s), system(0m26.146s)
+  (b): WER : 44.42
+   Time : real(0m8.201s), user(0m18.131s), system(0m0.957s)
+Approach (b) i.e. using lmrescore.sh is faster than approach (a) where we had to explicitly reconstruct HCLG graph and then calculate the WER.
+Conclusion : The second approach is faster by 26.103seconds.
+
+Assumption : Task 1 to Task3 have already been executed.
+
+# Steps to run task 5 
+Task 5 (a)
+1. set stage=5 in run.sh (Line 17)
+2. Line 97 replace exp/*/decode* with exp/tri1/decode*
+3. run the script : ./run.sh
+or if you want to see how much time it took, then
+run the following command  : time ./run.sh
+
+Task 5 (b)
+You should be under recipe direcotry before running these commands.
+1. create a directory data/lang5   : mkdir data/lang5
+2. copy contents of data/lang to data/lang5 : cp -r data/lang/* data/lang5/
+3. copy task5/G.fst to data/lang5/ : cp task5/G.fst data/lang5/
+4. create direcotory :  mkdir -p exp/tri5/decode_test
+time steps/lmrescore.sh data/lang data/lang5 data/test exp/tri1/decode_test/ exp/tri5/decode_test
+
+Check WER in the following direcotry:
+#run this command directly on terminal under recipe directory to check #the best WER
+for x in exp/tri5/decode*; do [ -d $x ] && grep WER $x/wer_* | utils/best_wer.sh; done
+
+************************************************************************
+TASK 6
+
+# Run following command in cmd:
+task6/score.sh --cmd "run.pl" data/test exp/tri1/graph exp/tri1/decode_test 
+
+Results:
+%WER 35.59 [ 258 / 725, 25 ins, 41 del, 192 sub ] [PARTIAL] exp/tri1/decode_test/wer_13_g
+%WER 58.33 [ 56 / 96, 6 ins, 14 del, 36 sub ] [PARTIAL] exp/tri1/decode_test/wer_13_m
+%WER 57.65 [ 49 / 85, 5 ins, 7 del, 37 sub ] [PARTIAL] exp/tri1/decode_test/wer_10_n
+%WER 72.34 [ 136 / 188, 7 ins, 47 del, 82 sub ] [PARTIAL] exp/tri1/decode_test/wer_13_l
+
+
+************************************************************************
+TASK 7 
+
+# Run following command in cmd:
+task7/findword.sh ninapenda
+
+See the task7 folder to see the corresponding wav word files.
+
+************************************************************************
+
+TASK 8 
+
+Submitted on Kaggle.
+Kaggle-id = 18305R003
